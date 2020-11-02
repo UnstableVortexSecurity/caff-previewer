@@ -3,4 +3,4 @@ project(caff_previewer C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(caff_previewer main.c)
+add_executable(caff_previewer src/main.c)
