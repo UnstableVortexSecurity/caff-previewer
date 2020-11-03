@@ -3,4 +3,4 @@ project(caff_previewer C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(caff_previewer src/main.c src/magic_memory.c src/magic_memory.h src/ciff_tools.h src/ciff_tools.c src/libtarga.c src/libtarga.h)
+add_executable(caff_previewer src/main.c src/magic_memory.c src/magic_memory.h src/ciff_tools.h src/ciff_tools.c src/libtarga.c src/libtarga.h src/pixeldata_utils.c src/pixeldata_utils.h)
