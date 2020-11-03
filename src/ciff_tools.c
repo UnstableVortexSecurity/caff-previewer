@@ -32,7 +32,7 @@ uint8_t parse_ciff_from_mem(const uint8_t* data, uint64_t data_len, uint64_t* wi
 
     // Do some preflight checks
     // Check if the magic is valid...
-    if (header_info->magic != 0x43494646) {
+    if (header_info->magic != 0x46464943) {
         return CIFF_PARSE_HEADER_BAD_MAGIC;
     }
 

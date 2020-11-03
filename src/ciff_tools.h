@@ -6,7 +6,6 @@
 #define CAFF_PREVIEWER_CIFF_TOOLS_H
 
 #include <stdint.h>
-#include "magic_memory.h"
 
 #define CIFF_PARSE_UNKNOWN_ERROR 1
 #define CIFF_PARSE_HEADER_LENGTHS_INCORRECT 2
@@ -16,7 +15,7 @@
 #define CIFF_PARSE_SUCCESS 0
 
 typedef struct __attribute__ ((packed)) ciff_static_header_t {
-    uint32_t magic; // should be equal to 0x43494646
+    uint32_t magic; // should be equal to 0x46464943 (Because x86 is big-endian, so essentially this is in reverse)
     uint64_t header_size;
     uint64_t content_size;
     uint64_t width;
