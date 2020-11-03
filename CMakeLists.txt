@@ -3,4 +3,4 @@ project(caff_previewer C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(caff_previewer src/main.c)
+add_executable(caff_previewer src/main.c src/magic_memory.c src/magic_memory.h)
