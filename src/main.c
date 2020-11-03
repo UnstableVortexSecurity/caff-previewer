@@ -31,12 +31,17 @@ int main() {
 
     if (result == CIFF_PARSE_SUCCESS) {
 
-        uint8_t *flipped_image = (uint8_t *) magic_malloc(context, pixel_data_size);
-        flip_image(ciff_file + pixel_data_starts, flipped_image, pixel_data_size, width, height);
-
-        if (!tga_write_raw("test.tga", width, height, flipped_image, TGA_TRUECOLOR_24)) {
-            printf("%s", tga_error_string(tga_get_last_error()));
+        uint8_t *flipped_image = (uint8_t *) magic_malloc(context, fsize - pixel_data_starts);
+        if (flip_image(ciff_file + pixel_data_starts, flipped_image, pixel_data_size, width, height) !=
+            IMAGE_FLIP_SUCCESS) {
+            printf("Literally failed to flip the image");
+        } else {
+            if (!tga_write_raw("test.tga", width, height, flipped_image, TGA_TRUECOLOR_24)) {
+                printf("%s", tga_error_string(tga_get_last_error()));
+            }
         }
+
+
     } else {
         printf("%d", result);
     }
