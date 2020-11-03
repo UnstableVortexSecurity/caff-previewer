@@ -65,7 +65,7 @@ uint8_t parse_ciff_from_mem(const uint8_t* data, uint64_t data_len, uint64_t* wi
     // Do some other checks to validate the header
 
     // According the specifications, the header must contain a newline character after the static fields
-    if (!contains(data+sizeof(struct ciff_static_header_t),header_info->header_size,'\n')) {
+    if (!contains(data+sizeof(struct ciff_static_header_t),header_info->header_size-sizeof(struct ciff_static_header_t),'\n')) {
         return CIFF_PARSE_UNKNOWN_ERROR;
     }
 
