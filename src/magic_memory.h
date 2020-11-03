@@ -5,6 +5,8 @@
 #ifndef CAFF_PREVIEWER_MAGIC_MEMORY_H
 #define CAFF_PREVIEWER_MAGIC_MEMORY_H
 
+#include <stddef.h>
+
 typedef struct magic_memory_context_t {
     void* next;
     void *ptr;
