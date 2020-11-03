@@ -4,22 +4,45 @@
 
 #include "libtarga.h"
 #include "magic_memory.h"
+#include "pixeldata_utils.h"
+#include "ciff_tools.h"
 
 int main() {
-    magic_memory_context_t *magic_run = magic_memory_begin();
+    magic_memory_context_t *context = magic_memory_begin();
 
-    uint8_t *picture = (uint8_t *) magic_malloc(magic_run, 50 * 50 * 3);
-    for (uint16_t i = 0; i < (50*50);i++) {
-        picture[(i*3)] = 0;
-        picture[(i*3)+1] = (i % 100)*25;
-        picture[(i*3)+2] = 255;
+
+    FILE *fp = fopen("/home/marcsello/Documents/etyetem/szamitobiztonsag/caff/1.ciff", "rb");
+
+    fseek(fp, 0L, SEEK_END);
+    uint64_t fsize = ftell(fp);
+    fseek(fp, 0L, SEEK_SET);
+
+    uint8_t *ciff_file = (uint8_t *) magic_malloc(context, fsize);
+    fread(ciff_file, 1, fsize, fp);
+    fclose(fp);
+
+    uint64_t width;
+    uint64_t height;
+    uint64_t pixel_data_starts;
+
+    uint8_t result = parse_ciff_from_mem(ciff_file, fsize, &width, &height, &pixel_data_starts);
+
+    uint64_t pixel_data_size = width * height * 3;
+
+    if (result == CIFF_PARSE_SUCCESS) {
+
+        uint8_t *flipped_image = (uint8_t *) magic_malloc(context, pixel_data_size);
+        flip_image(ciff_file + pixel_data_starts, flipped_image, pixel_data_size, width, height);
+
+        if (!tga_write_raw("test.tga", width, height, flipped_image, TGA_TRUECOLOR_24)) {
+            printf("%s", tga_error_string(tga_get_last_error()));
+        }
+    } else {
+        printf("%d", result);
     }
 
-    if (!tga_write_raw("test.tga", 50, 50, picture, TGA_TRUECOLOR_24)) {
-        printf("%s", tga_error_string(tga_get_last_error()));
-    }
 
-    magic_cleanup(magic_run); // Free all memory used automagically
+    magic_cleanup(context); // Free all memory used automagically
 
     return 0;
 }
