@@ -5,19 +5,14 @@
 #include "ciff_tools.h"
 #include "utils.h"
 
-uint8_t parse_ciff_from_mem(const uint8_t* data, uint64_t data_len, uint64_t* width, uint64_t* height, uint64_t* pixel_data_starts) {
-    /**
-     * Igazából, ezek többnyire csak változatos ellenőrzések
-     * A függvény validálja a CIFF fájl tartalmát, majd ha ez sikeres volt, akkor megmondja
-     * - A kép dimenzióit
-     * - Hogy hol kezdődik a pixel információ a képben
-     * Az, hogy a kép információt kimásolja-e, az a programozóra van bízva.
-     */
+uint8_t validate_ciff(const uint8_t* data, uint64_t data_len) {
 
     // Read out the static part of the header (If we have at least header bytes)
     if (data_len < sizeof(ciff_static_header_t)) {
         return CIFF_PARSE_HEADER_TOO_SHORT;
     }
+
+    // This is just a pointer with different type information
     ciff_static_header_t* header_info = (struct ciff_static_header_t*)data;
 
     // Do some preflight checks
@@ -63,6 +58,21 @@ uint8_t parse_ciff_from_mem(const uint8_t* data, uint64_t data_len, uint64_t* wi
     if (data[header_info->header_size-1] != 0) {
         return CIFF_PARSE_UNKNOWN_ERROR;
     }
+
+    return CIFF_PARSE_SUCCESS;
+}
+
+uint8_t get_pixel_data_from_ciff(const uint8_t* data, uint64_t data_len, uint64_t* width, uint64_t* height, uint64_t* pixel_data_starts) {
+    /**
+     * Ez csak visszad egy pointert, hogy honnan kezdődik a pixel data, miután validálta a képet
+     */
+
+    uint8_t validate_result = validate_ciff(data, data_len);
+    if (validate_result != CIFF_PARSE_SUCCESS) {
+        return validate_result;
+    }
+
+    ciff_static_header_t* header_info = (struct ciff_static_header_t*)data; // This is just a pointer with different type information
 
     // Set return data
     *width = header_info->width;
