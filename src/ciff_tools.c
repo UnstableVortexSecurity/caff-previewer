@@ -3,17 +3,7 @@
 //
 
 #include "ciff_tools.h"
-#include "stdbool.h"
-
-uint8_t contains(const uint8_t* data, uint64_t data_len, uint8_t what) {
-    for (uint64_t i = 0; i < data_len; i++) {
-        if (data[i] == what) {
-            return true;
-        }
-    }
-    return false;
-}
-
+#include "utils.h"
 
 uint8_t parse_ciff_from_mem(const uint8_t* data, uint64_t data_len, uint64_t* width, uint64_t* height, uint64_t* pixel_data_starts) {
     /**
