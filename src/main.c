@@ -6,32 +6,32 @@
 #include "magic_memory.h"
 #include "pixeldata_utils.h"
 #include "ciff_tools.h"
+#include "utils.h"
 
 int main() {
     magic_memory_context_t *context = magic_memory_begin();
 
+    uint8_t *ciff_file;
+    uint64_t ciff_size;
+    uint8_t result = read_file_to_mem(context, "/home/marcsello/Documents/etyetem/szamitobiztonsag/caff/1.ciff",
+                                      67108864, &ciff_file, &ciff_size);
 
-    FILE *fp = fopen("/home/marcsello/Documents/etyetem/szamitobiztonsag/caff/1.ciff", "rb");
-
-    fseek(fp, 0L, SEEK_END);
-    uint64_t fsize = ftell(fp);
-    fseek(fp, 0L, SEEK_SET);
-
-    uint8_t *ciff_file = (uint8_t *) magic_malloc(context, fsize);
-    fread(ciff_file, 1, fsize, fp);
-    fclose(fp);
+    if (result != FILE_READ_SUCCESS) {
+        printf("File read failure: %d", result);
+        return 1;
+    }
 
     uint64_t width;
     uint64_t height;
     uint64_t pixel_data_starts;
 
-    uint8_t result = parse_ciff_from_mem(ciff_file, fsize, &width, &height, &pixel_data_starts);
+    result = get_pixel_data_from_ciff(ciff_file, ciff_size, &width, &height, &pixel_data_starts);
 
     uint64_t pixel_data_size = width * height * 3;
 
     if (result == CIFF_PARSE_SUCCESS) {
 
-        uint8_t *flipped_image = (uint8_t *) magic_malloc(context, fsize - pixel_data_starts);
+        uint8_t *flipped_image = (uint8_t *) magic_malloc(context, ciff_size - pixel_data_starts);
         if (flip_image(ciff_file + pixel_data_starts, flipped_image, pixel_data_size, width, height) !=
             IMAGE_FLIP_SUCCESS) {
             printf("Literally failed to flip the image");
