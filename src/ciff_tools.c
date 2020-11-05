@@ -13,7 +13,7 @@ uint8_t validate_ciff(const uint8_t* data, uint64_t data_len) {
     }
 
     // This is just a pointer with different type information
-    ciff_static_header_t* header_info = (struct ciff_static_header_t*)data;
+    ciff_static_header_t* header_info = (ciff_static_header_t*)data;
 
     // Do some preflight checks
     // Check if the magic is valid...
@@ -50,7 +50,7 @@ uint8_t validate_ciff(const uint8_t* data, uint64_t data_len) {
     // Do some other checks to validate the header
 
     // According the specifications, the header must contain a newline character after the static fields
-    if (!contains(data+sizeof(struct ciff_static_header_t),header_info->header_size-sizeof(struct ciff_static_header_t),'\n')) {
+    if (!contains(data+sizeof(ciff_static_header_t),header_info->header_size-sizeof(ciff_static_header_t),'\n')) {
         return CIFF_PARSE_UNKNOWN_ERROR;
     }
 
@@ -72,7 +72,7 @@ uint8_t get_pixel_data_from_ciff(const uint8_t* data, uint64_t data_len, uint64_
         return validate_result;
     }
 
-    ciff_static_header_t* header_info = (struct ciff_static_header_t*)data; // This is just a pointer with different type information
+    ciff_static_header_t* header_info = (ciff_static_header_t*)data; // This is just a pointer with different type information
 
     // Set return data
     *width = header_info->width;
