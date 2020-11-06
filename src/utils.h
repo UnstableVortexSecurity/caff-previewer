@@ -10,11 +10,13 @@
 
 #include "magic_memory.h"
 
-#define FILE_READ_COULD_NOT_OPEN 1
-#define FILE_READ_TOO_BIG 2
-#define FILE_READ_COULD_NOT_ALLOCATE 3
-#define FILE_READ_ERROR 4
-#define FILE_READ_SUCCESS 0
+#define FILE_READ_ERROR_PREFIX          0x00
+#define FILE_READ_COULD_NOT_OPEN        (FILE_READ_ERROR_PREFIX + 0x01)
+#define FILE_READ_TOO_BIG               (FILE_READ_ERROR_PREFIX + 0x02)
+#define FILE_READ_COULD_NOT_ALLOCATE    (FILE_READ_ERROR_PREFIX + 0x03)
+#define FILE_READ_ERROR                 (FILE_READ_ERROR_PREFIX + 0x04)
+
+#define FILE_READ_SUCCESS               0x00
 
 bool contains(const uint8_t *data, uint64_t data_len, uint8_t what);
 

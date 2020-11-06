@@ -193,5 +193,5 @@ uint8_t parse_caff_get_first_ciff(uint8_t *caff_data, uint64_t caff_data_len, ui
         p += seek_by;
     }
 
-    return CAFF_PARSE_ANIMATION_COUNT_ERROR;
+    return CAFF_PARSE_UNKNOWN_ERROR;
 }

@@ -7,12 +7,14 @@
 
 #include <stdint.h>
 
-#define CIFF_PARSE_UNKNOWN_ERROR 1
-#define CIFF_PARSE_HEADER_LENGTHS_INCORRECT 2
-#define CIFF_PARSE_HEADER_DIMENSIONS_INCORRECT 3
-#define CIFF_PARSE_HEADER_TOO_SHORT 4
-#define CIFF_PARSE_HEADER_BAD_MAGIC 5
-#define CIFF_PARSE_SUCCESS 0
+#define CIFF_PARSE_ERROR_PREFIX                 0x20
+#define CIFF_PARSE_HEADER_LENGTHS_INCORRECT     (CIFF_PARSE_ERROR_PREFIX + 0x01)
+#define CIFF_PARSE_HEADER_DIMENSIONS_INCORRECT  (CIFF_PARSE_ERROR_PREFIX + 0x02)
+#define CIFF_PARSE_HEADER_TOO_SHORT             (CIFF_PARSE_ERROR_PREFIX + 0x03)
+#define CIFF_PARSE_HEADER_BAD_MAGIC             (CIFF_PARSE_ERROR_PREFIX + 0x04)
+#define CIFF_PARSE_UNKNOWN_ERROR                (CIFF_PARSE_ERROR_PREFIX + 0x05)
+
+#define CIFF_PARSE_SUCCESS                      0x00
 
 typedef struct __attribute__ ((packed)) ciff_static_header_t {
     uint32_t magic; // should be equal to 0x46464943 (Because x86 is big-endian, so essentially this is in reverse)

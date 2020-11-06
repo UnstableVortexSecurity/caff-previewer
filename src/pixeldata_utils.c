@@ -7,7 +7,7 @@
 uint8_t flip_image(const uint8_t *source, uint8_t *destination, uint64_t data_length, uint64_t width, uint64_t height) {
 
     if ((width*height*3) != data_length) {
-        return IMAGE_FLIP_FAIL;
+        return IMAGE_FLIP_LENGTH_ERROR;
     }
 
     for (uint64_t i = 0; i < height; i++) {
