@@ -62,14 +62,14 @@ uint8_t validate_ciff(const uint8_t* data, uint64_t data_len) {
     return CIFF_PARSE_SUCCESS;
 }
 
-uint8_t get_pixel_data_from_ciff(const uint8_t* data, uint64_t data_len, uint64_t* width, uint64_t* height, uint64_t* pixel_data_starts) {
+uint8_t parse_ciff_get_pixel_data(const uint8_t* data, uint64_t data_len, uint8_t** pixel_data_ptr, uint64_t *pixel_data_len, uint64_t* width, uint64_t* height) {
     /**
      * Ez csak visszad egy pointert, hogy honnan kezdődik a pixel data, miután validálta a képet
      */
 
-    uint8_t validate_result = validate_ciff(data, data_len);
-    if (validate_result != CIFF_PARSE_SUCCESS) {
-        return validate_result;
+    uint8_t result = validate_ciff(data, data_len);
+    if (result != CIFF_PARSE_SUCCESS) {
+        return result;
     }
 
     ciff_static_header_t* header_info = (ciff_static_header_t*)data; // This is just a pointer with different type information
@@ -77,7 +77,8 @@ uint8_t get_pixel_data_from_ciff(const uint8_t* data, uint64_t data_len, uint64_
     // Set return data
     *width = header_info->width;
     *height = header_info->height;
-    *pixel_data_starts = header_info->header_size;
+    *pixel_data_ptr = ((uint8_t*)data) + (header_info->header_size);
+    *pixel_data_len = header_info->content_size;
     return CIFF_PARSE_SUCCESS;
 
 }

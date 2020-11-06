@@ -25,6 +25,6 @@ typedef struct __attribute__ ((packed)) ciff_static_header_t {
 } ciff_static_header_t;
 
 uint8_t validate_ciff(const uint8_t* data, uint64_t data_len);
-uint8_t get_pixel_data_from_ciff(const uint8_t* data, uint64_t data_len, uint64_t* width, uint64_t* height, uint64_t* pixel_data_starts);
+uint8_t parse_ciff_get_pixel_data(const uint8_t* data, uint64_t data_len, uint8_t** pixel_data_ptr, uint64_t *pixel_data_len, uint64_t* width, uint64_t* height);
 
 #endif //CAFF_PREVIEWER_CIFF_TOOLS_H
