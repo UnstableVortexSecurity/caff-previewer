@@ -23,7 +23,11 @@ uint8_t read_file_to_mem(mm_ctx context, const char *filename, uint64_t max_len,
         return FILE_READ_COULD_NOT_OPEN;
     }
 
-    fseek(fp, 0L, SEEK_END);
+    if (fseek(fp, 0L, SEEK_END) != 0) {
+        fclose(fp);
+        return FILE_SEEK_ERROR;
+    }
+
     uint64_t fsize = ftell(fp);
 
     if (fsize > max_len) {
@@ -31,7 +35,10 @@ uint8_t read_file_to_mem(mm_ctx context, const char *filename, uint64_t max_len,
         return FILE_READ_TOO_BIG;
     }
 
-    fseek(fp, 0L, SEEK_SET);
+    if (fseek(fp, 0L, SEEK_SET) != 0) {
+        fclose(fp);
+        return FILE_SEEK_ERROR;
+    }
 
     uint8_t *contents = (uint8_t *) magic_malloc(context, fsize);
 

@@ -14,7 +14,8 @@
 #define FILE_READ_COULD_NOT_OPEN        (FILE_READ_ERROR_PREFIX + 0x01)
 #define FILE_READ_TOO_BIG               (FILE_READ_ERROR_PREFIX + 0x02)
 #define FILE_READ_COULD_NOT_ALLOCATE    (FILE_READ_ERROR_PREFIX + 0x03)
-#define FILE_READ_ERROR                 (FILE_READ_ERROR_PREFIX + 0x04)
+#define FILE_SEEK_ERROR                 (FILE_READ_ERROR_PREFIX + 0x04)
+#define FILE_READ_ERROR                 (FILE_READ_ERROR_PREFIX + 0x05)
 
 #define FILE_READ_SUCCESS               0x00
 
