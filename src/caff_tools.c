@@ -18,7 +18,7 @@ uint8_t parse_caff_header(uint8_t *data, uint64_t data_len, uint64_t *num_anim) 
     caff_header_t *header_info = (caff_header_t *) data;
 
     if (header_info->magic != 0x46464143) {
-        return CAFF_PARSE_BAD_MAGIC;
+        return CAFF_PARSE_HEADER_BAD_MAGIC;
     }
 
     if (header_info->header_size != 20) {
@@ -44,21 +44,21 @@ uint8_t validate_caff_credits(uint8_t *data, uint64_t data_len) {
     credits_header_t *header_info = (credits_header_t *) data;
 
     if (header_info->month > 12 || header_info->month == 0) {
-        return CAFF_PARSE_BAD_DATE;
+        return CAFF_PARSE_CREDITS_BAD_DATE;
     }
 
     uint8_t month_lengths[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     if (header_info->day > month_lengths[header_info->month - 1] || header_info->day == 0) {
-        return CAFF_PARSE_BAD_DATE;
+        return CAFF_PARSE_CREDITS_BAD_DATE;
     }
 
     if (header_info->hour > 23) {
-        return CAFF_PARSE_BAD_DATE;
+        return CAFF_PARSE_CREDITS_BAD_DATE;
     }
 
     if (header_info->minute > 60) {
-        return CAFF_PARSE_BAD_DATE;
+        return CAFF_PARSE_CREDITS_BAD_DATE;
     }
 
     uint64_t calculated_len = header_info->creator_len + sizeof(credits_header_t);
@@ -80,7 +80,7 @@ uint8_t validate_caff_animation(uint8_t *data, uint64_t data_len) {
 
 
     if (header_info->duration == 0) {
-        return CAFF_PARSE_NO_DURATION;
+        return CAFF_PARSE_ANIMATION_NO_DURATION;
     }
 
     // NOTE: Ciff validation is solved in the CIFF tools
@@ -126,7 +126,7 @@ uint8_t validate_caff_file(uint8_t *data, uint64_t data_len) {
 
         if ((frame_counter == 0 && frame_header->id != CAFF_FRAME_HEADER) ||
             (frame_counter > 0 && frame_header->id == CAFF_FRAME_HEADER)) {
-            return CAFF_PARSE_HEADER_ERROR;
+            return CAFF_PARSE_HEADER_PLACE_ERROR;
         }
 
         uint8_t result;

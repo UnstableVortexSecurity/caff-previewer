@@ -12,8 +12,8 @@
 #define USAGE_ERROR_PREFIX 0x50
 #define USAGE_ERROR_WRONG_PARAMETERS (USAGE_ERROR_PREFIX + 0x01)
 
-#define OTHER_ERROR_PREFIX 0x60
-#define OTHER_FLIP_COULD_NOT_ALLOCATE (OTHER_ERROR_PREFIX + 0x01)
+// Warning: This is defined outside the pixeldata_utils.h (because this event could happen here only)
+#define IMAGE_FLIP_COULD_NOT_ALLOCATE (IMAGE_FLIP_ERROR_PREFIX + 0x02)
 
 // Mivel az egyszerűség kedvéért az egész fájlt memóriába olvassuk, jobb ha limitáljuk a méretét
 #define CAFF_MAX_SIZE 536870912 // 512MB
@@ -58,7 +58,7 @@ uint8_t perform_extraction(mm_ctx context, const char *infile, const char *outfi
     uint8_t *flipped_pixel_data = (uint8_t *) magic_malloc(context, pixel_data_len);
 
     if (flipped_pixel_data == NULL) {
-        return OTHER_FLIP_COULD_NOT_ALLOCATE;
+        return IMAGE_FLIP_COULD_NOT_ALLOCATE;
     }
 
     result = flip_image(pixel_data, flipped_pixel_data, pixel_data_len, width, height);

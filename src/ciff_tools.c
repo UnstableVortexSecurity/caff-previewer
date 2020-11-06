@@ -9,7 +9,7 @@ uint8_t validate_ciff(const uint8_t* data, uint64_t data_len) {
 
     // Read out the static part of the header (If we have at least header bytes)
     if (data_len < sizeof(ciff_static_header_t)) {
-        return CIFF_PARSE_HEADER_TOO_SHORT;
+        return CIFF_PARSE_LENGTH_ERROR;
     }
 
     // This is just a pointer with different type information
@@ -23,28 +23,32 @@ uint8_t validate_ciff(const uint8_t* data, uint64_t data_len) {
 
     // Check if the fields in the header seems valid (none of the size fields larger than the whole file)
     if ((header_info->header_size > data_len) || (header_info->content_size > data_len)) {
-        return CIFF_PARSE_HEADER_LENGTHS_INCORRECT;
+        return CIFF_PARSE_LENGTH_ERROR;
     }
 
     if ((header_info->header_size+header_info->content_size) > data_len) {
-        return CIFF_PARSE_HEADER_LENGTHS_INCORRECT;
+        return CIFF_PARSE_LENGTH_ERROR;
+    }
+
+    if (header_info->width == 0 || header_info->height == 0) {
+        return CIFF_PARSE_HEADER_DIMENSIONS_INCORRECT;
     }
 
     // Pre-Calculate some variables and check against those as well
     uint64_t calculated_pixeldata_length_by_header = header_info->width * header_info->height * 3;
     if (data_len < calculated_pixeldata_length_by_header) {
-        // The number of pixels defined in the header is larger than the while file
-        return CIFF_PARSE_HEADER_DIMENSIONS_INCORRECT;
+        // The number of pixels defined in the header is larger than the whole file
+        return CIFF_PARSE_LENGTH_ERROR;
     }
 
     if (calculated_pixeldata_length_by_header != header_info->content_size) {
-        return CIFF_PARSE_HEADER_DIMENSIONS_INCORRECT;
+        return CIFF_PARSE_LENGTH_ERROR;
     }
 
     uint64_t calculated_total_length_by_header = calculated_pixeldata_length_by_header + header_info->header_size;
     if (calculated_total_length_by_header != data_len) {
         // The header + pixel data is not equals the length of the file
-        return CIFF_PARSE_HEADER_LENGTHS_INCORRECT;
+        return CIFF_PARSE_LENGTH_ERROR;
     }
 
     // Do some other checks to validate the header
