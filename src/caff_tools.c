@@ -152,9 +152,11 @@ uint8_t validate_caff_file(uint8_t *data, uint64_t data_len) {
         frame_counter++;
         uint64_t seek_by = frame_header->length + sizeof(caff_frame_header_t);
         if (seek_by > len_remaining) {
+            // Since we working with unsigned integers, this check here is explicitly needed
+            // So that the following subtraction won't cause integer overflow
             return CAFF_PARSE_LENGTH_ERROR;
         }
-        len_remaining -= seek_by;
+        len_remaining -= seek_by; // Overflow here is protected by the check above
         p += seek_by;
     }
 
