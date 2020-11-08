@@ -151,8 +151,16 @@ uint8_t validate_caff_file(uint8_t *data, uint64_t data_len) {
 
         frame_counter++;
         uint64_t seek_by = frame_header->length + sizeof(caff_frame_header_t);
+        if (seek_by > len_remaining) {
+            return CAFF_PARSE_LENGTH_ERROR;
+        }
         len_remaining -= seek_by;
         p += seek_by;
+    }
+
+    if (len_remaining > 0) {
+        // This is probably won't be called but only if the while loop above breaks abnormally
+        return CAFF_PARSE_LENGTH_ERROR;
     }
 
     if (expected_num_anim != num_anim) {
@@ -179,7 +187,7 @@ uint8_t parse_caff_get_first_ciff(uint8_t *caff_data, uint64_t caff_data_len, ui
     // Seek for the first CIFF header
     uint8_t *p = caff_data;
     uint64_t caff_data_len_remaining = caff_data_len;
-    while (caff_data_len_remaining > 0) {
+    while (caff_data_len_remaining > 0) { // This won't cause integer overflow, because those files are validated previously
         caff_frame_header_t *frame_header = (caff_frame_header_t *) p;
 
         if (frame_header->id == CAFF_FRAME_ANIMATION) {
