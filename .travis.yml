@@ -1,0 +1,16 @@
+language: minimal
+arch: amd64
+os: linux
+dist: focal
+virt: vm
+
+services:
+  - docker
+
+script:
+  - docker build -t="registry.kmlabz.com/unstablevortex/caff-previewer:$TRAVIS_BUILD_NUMBER" .
+  - docker tag "registry.kmlabz.com/unstablevortex/caff-previewer:$TRAVIS_BUILD_NUMBER" "registry.kmlabz.com/unstablevortex/caff-previewer:latest"
+  
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin registry.kmlabz.com
+  - docker push registry.kmlabz.com/unstablevortex/caff-previewer # push all tags
